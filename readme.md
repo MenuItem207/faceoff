@@ -22,6 +22,9 @@ This table contains data for a valid user
 ### id
 the user's id
 
+### name
+the user's name
+
 ### email
 The valid user's email
 

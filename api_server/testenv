@@ -1,0 +1,7 @@
+# rename this file to .env and fill in the blanks
+PORT=
+mysqlHost=
+mysqlPort=
+mysqlDatabase=
+mysqlUser=
+mysqlPassword=
