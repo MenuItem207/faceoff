@@ -36,6 +36,8 @@ the device id
 ### state (bool)
 Whether or not the device is currently unlocked
 
+## device_faces
+
 ## Login Attempts
 ---
 This table contains data for all the login attempts for a device
