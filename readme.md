@@ -2,9 +2,12 @@
 
 ## Documentation
 
-## Pending Users
+## Pending Codes
 ---
-This table contains data for a 'pending user'
+This table contains data for a device without an account
+
+### id
+the pending code id
 
 ### join_code
 This code can be used to allow a user to create an account
@@ -16,6 +19,8 @@ This code is a local id for a unique 'device'
 ---
 This table contains data for a valid user
 
+### id
+the user's id
 
 ### email
 The valid user's email
@@ -34,13 +39,30 @@ The devices
 the device id
 
 ### state (bool)
-Whether or not the device is currently unlocked
+Whether or not the device is currently unlocked, locked or disabled
 
 ## device_faces
+---
+login faces 
+
+### id
+the device face id
+
+### name
+the device face name (casual)
+
+### device_id
+The device id
+
+### img_url
+url of the user's verification image
 
 ## Login Attempts
 ---
 This table contains data for all the login attempts for a device
+
+### id
+the login attempt id
 
 ### device_id
 The device id
@@ -48,7 +70,7 @@ The device id
 ### success_state (bool)
 Whether or not the login attempt was successful
 
-### img
+### img_url
 The captured image used to log-in the user
 
 
