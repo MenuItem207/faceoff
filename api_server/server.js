@@ -79,7 +79,7 @@ app.post('/register', async (req, res) => {
 
             let deletePendingCodeSQL = `DELETE FROM pending_codes WHERE join_code='${join_code}'`;
             let deletePendingCodeResults = await db.promise().query(deletePendingCodeSQL);
-            res.json({ 'status': 'Success', 1: newUserResults, 2: deletePendingCodeResults })
+            res.json({ 'status': 'Success', 1: newUserResults, 2: deletePendingCodeResults });
             return;
         }
     }
@@ -91,12 +91,12 @@ app.post('/register', async (req, res) => {
 const multer = require('multer');
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, 'images/') // location of images 
+        cb(null, 'images/'); // location of images 
     },
     filename: function (req, file, cb) {
         let extArray = file.mimetype.split("/");
         let extension = extArray[extArray.length - 1];
-        cb(null, Date.now() + '.' + extension)
+        cb(null, Date.now() + '.' + extension);
     }
 });
 const upload = multer({
@@ -105,30 +105,27 @@ const upload = multer({
             let extArray = file.mimetype.split("/");
             let ext = extArray[extArray.length - 1];
             if (ext !== 'png' && ext !== 'jpg' && ext !== 'gif' && ext !== 'jpeg') {
-                console.log(ext)
-                return callback(new Error('Only images are allowed'))
+                return callback(new Error('Only images are allowed'));
             }
-            callback(null, true)
+            callback(null, true);
         }
-})
+});
 
 app.post(
     '/image',
     upload.single('image'), // form data key should be 'image'
-    async (req, res) => {
-        console.log(req.file)
-
+    (req, res) => {
         res.json({ 'filename': req.file.filename });
     }
 );
 
 app.get(
     '/image/:id',
-    async (req, res) => {
+    (req, res) => {
         res.sendFile(`${__dirname}\\images\\${req.params.id}`);
     }
-)
+);
 
-const serverPort = process.env.PORT
+const serverPort = process.env.PORT;
 app.listen(serverPort);
-console.log('Server running on port', serverPort)
+console.log('Server running on port', serverPort);
