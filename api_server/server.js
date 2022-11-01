@@ -118,7 +118,7 @@ app.post(
     async (req, res) => {
         console.log(req.file)
 
-        res.send(200);
+        res.json({ 'filename': req.file.filename });
     }
 );
 
