@@ -44,7 +44,7 @@ the device id
 ### state (bool)
 Whether or not the device is currently unlocked, locked or disabled
 
-## device_faces
+## security_profiles
 ---
 login faces 
 

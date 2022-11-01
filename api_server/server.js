@@ -42,7 +42,7 @@ app.post('/login', async (req, res) => {
     let results = await db.promise().query(loginSQL);
     if (results[0].length === 1) {
         if (results[0][0].password === password) {
-            res.json({ user_id: results[0][0].id });
+            res.json({ user_id: results[0][0].id, device_id: results[0][0].device_id });
             return;
         }
         res.status(400).json('Invalid password');
@@ -79,6 +79,7 @@ app.post('/register', async (req, res) => {
 
             let deletePendingCodeSQL = `DELETE FROM pending_codes WHERE join_code='${join_code}'`;
             let deletePendingCodeResults = await db.promise().query(deletePendingCodeSQL);
+            // TODO: return user id and device id
             res.json({ 'status': 'Success', 1: newUserResults, 2: deletePendingCodeResults });
             return;
         }
