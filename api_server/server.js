@@ -87,6 +87,47 @@ app.post('/register', async (req, res) => {
     res.status(401).json('Invalid join code');
 });
 
+// setup multer
+const multer = require('multer');
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'images/') // location of images 
+    },
+    filename: function (req, file, cb) {
+        let extArray = file.mimetype.split("/");
+        let extension = extArray[extArray.length - 1];
+        cb(null, Date.now() + '.' + extension)
+    }
+});
+const upload = multer({
+    storage: storage, fileFilter:
+        function (req, file, callback) {
+            let extArray = file.mimetype.split("/");
+            let ext = extArray[extArray.length - 1];
+            if (ext !== 'png' && ext !== 'jpg' && ext !== 'gif' && ext !== 'jpeg') {
+                console.log(ext)
+                return callback(new Error('Only images are allowed'))
+            }
+            callback(null, true)
+        }
+})
+
+app.post(
+    '/image',
+    upload.single('image'), // form data key should be 'image'
+    async (req, res) => {
+        console.log(req.file)
+
+        res.send(200);
+    }
+);
+
+app.get(
+    '/image/:id',
+    async (req, res) => {
+        res.sendFile(`${__dirname}\\images\\${req.params.id}`);
+    }
+)
 
 const serverPort = process.env.PORT
 app.listen(serverPort);
