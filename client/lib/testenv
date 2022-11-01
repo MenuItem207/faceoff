@@ -1,0 +1,3 @@
+// rename this file to env.dart and fill up the addresses
+const String authServerAddress = '';
+const String socketServerAddress = '';

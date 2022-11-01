@@ -30,21 +30,32 @@ db.connect((err) => {
 app.use(cors())
 app.use(express.json())
 
+/**
+ * response codes used:
+ * 400 - wrong password
+ * 401 - wrong email
+ */
 app.post('/login', async (req, res) => {
     let email = req.body.email;
     let password = req.body.password;
     let loginSQL = `SELECT * FROM users WHERE email='${email}'`;
     let results = await db.promise().query(loginSQL);
-    console.log(results);
     if (results[0].length === 1) {
         if (results[0][0].password === password) {
             res.json({ user_id: results[0][0].id });
+            return;
         }
         res.status(400).json('Invalid password');
+        return;
     }
-    res.status(400).json('Invalid email');
+    res.status(401).json('Invalid email');
 });
 
+/**
+ * response codes used
+ * 400 - email already in use
+ * 401 - invalid join code
+ */
 app.post('/register', async (req, res) => {
     let email = req.body.email;
     let password = req.body.password;
@@ -73,7 +84,7 @@ app.post('/register', async (req, res) => {
         }
     }
 
-    res.status(400).json('Invalid join code');
+    res.status(401).json('Invalid join code');
 });
 
 

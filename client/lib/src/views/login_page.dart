@@ -97,7 +97,7 @@ class LoginPage extends StatelessWidget {
                           padding: const EdgeInsets.only(top: 15),
                           child: ButtonWidget(
                             label: 'Submit',
-                            onTap: () {},
+                            onTap: controller.onSubmit,
                           ),
                         ),
                       ],

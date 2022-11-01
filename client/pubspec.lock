@@ -36,6 +36,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.16.0"
+  convert:
+    dependency: transitive
+    description:
+      name: convert
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.1"
   crypto:
     dependency: transitive
     description:
@@ -43,6 +50,55 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.2"
+  dargon2_core:
+    dependency: transitive
+    description:
+      name: dargon2_core
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.1"
+  dargon2_flutter:
+    dependency: "direct main"
+    description:
+      name: dargon2_flutter
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.0"
+  dargon2_flutter_desktop:
+    dependency: transitive
+    description:
+      name: dargon2_flutter_desktop
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.0"
+  dargon2_flutter_mobile:
+    dependency: transitive
+    description:
+      name: dargon2_flutter_mobile
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.0"
+  dargon2_flutter_platform_interface:
+    dependency: transitive
+    description:
+      name: dargon2_flutter_platform_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.0"
+  dargon2_flutter_web:
+    dependency: transitive
+    description:
+      name: dargon2_flutter_web
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.0"
+  dargon2_interface:
+    dependency: transitive
+    description:
+      name: dargon2_interface
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.0"
   fake_async:
     dependency: transitive
     description:
@@ -81,6 +137,11 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_web_plugins:
+    dependency: transitive
+    description: flutter
+    source: sdk
+    version: "0.0.0"
   google_fonts:
     dependency: "direct main"
     description:
@@ -102,6 +163,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.0.2"
+  js:
+    dependency: transitive
+    description:
+      name: js
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.6.4"
   lints:
     dependency: transitive
     description:

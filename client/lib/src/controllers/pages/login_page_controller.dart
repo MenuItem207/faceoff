@@ -1,3 +1,4 @@
+import 'package:client/src/controllers/helpers/api_helper.dart';
 import 'package:flutter/material.dart';
 
 /// stores logic for [LoginPage]
@@ -25,7 +26,7 @@ class LoginPageController {
   }
 
   /// called on name input field text changed
-  void onNameInputFieldChanged(String newText) {
+  bool onNameInputFieldChanged(String newText) {
     nameInput = newText;
     bool isValid = verifyNameInputField();
     if (!isValid) {
@@ -33,6 +34,8 @@ class LoginPageController {
     } else {
       nameInputFieldErrorNotifier.value = '';
     }
+
+    return isValid;
   }
 
   /// current user input for email
@@ -47,7 +50,7 @@ class LoginPageController {
   }
 
   /// called on email input field text changed
-  void onEmailInputFieldChanged(String newText) {
+  bool onEmailInputFieldChanged(String newText) {
     emailInput = newText;
     bool isValid = verifyEmailInputField();
     if (!isValid) {
@@ -55,6 +58,8 @@ class LoginPageController {
     } else {
       emailInputFieldErrorNotifier.value = '';
     }
+
+    return isValid;
   }
 
   /// current user input for password
@@ -69,7 +74,7 @@ class LoginPageController {
   }
 
   /// called on password input field text changed
-  void onPasswordInputFieldChanged(String newText) {
+  bool onPasswordInputFieldChanged(String newText) {
     passwordInput = newText;
     bool isValid = verifyPasswordInputField();
     if (!isValid) {
@@ -77,6 +82,8 @@ class LoginPageController {
     } else {
       passwordInputFieldErrorNotifier.value = '';
     }
+
+    return isValid;
   }
 
   /// current user input for join code
@@ -91,7 +98,7 @@ class LoginPageController {
   }
 
   /// called on join code input field text changed
-  void onJoinCodeInputFieldChanged(String newText) {
+  bool onJoinCodeInputFieldChanged(String newText) {
     joinCodeInput = newText;
     bool isValid = verifyJoinCodeInputField();
     if (!isValid) {
@@ -99,6 +106,60 @@ class LoginPageController {
           'Join Code must be 5 characters in length i.e JSKLE';
     } else {
       joinCodeInputFieldErrorNotifier.value = '';
+    }
+
+    return isValid;
+  }
+
+  /// on submit button pressed
+  void onSubmit() async {
+    try {
+      if (isLogin) {
+        // verify
+        if (onEmailInputFieldChanged(emailInput) &&
+            onPasswordInputFieldChanged(passwordInput)) {
+          final response = await APIHelpers.login(emailInput, passwordInput);
+          if (response.statusCode == 200) {
+            // logged in
+            print('logged in');
+          } else {
+            switch (response.statusCode) {
+              case 400:
+                passwordInputFieldErrorNotifier.value = 'Invalid password';
+                break;
+              case 401:
+                emailInputFieldErrorNotifier.value = 'Unknown email';
+                break;
+              default:
+            }
+          }
+        }
+      } else {
+        // verify
+        if (onNameInputFieldChanged(nameInput) &&
+            onEmailInputFieldChanged(emailInput) &&
+            onPasswordInputFieldChanged(passwordInput) &&
+            onJoinCodeInputFieldChanged(joinCodeInput)) {
+          final response = await APIHelpers.register(
+              nameInput, emailInput, passwordInput, joinCodeInput);
+          if (response.statusCode == 200) {
+            // logged in
+            print('logged in');
+          } else {
+            switch (response.statusCode) {
+              case 400:
+                emailInputFieldErrorNotifier.value = 'Email already in use';
+                break;
+              case 401:
+                joinCodeInputFieldErrorNotifier.value = 'Invalid Code';
+                break;
+              default:
+            }
+          }
+        }
+      }
+    } catch (err) {
+      debugPrint(err.toString());
     }
   }
 }
