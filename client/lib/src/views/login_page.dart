@@ -24,8 +24,7 @@ class LoginPage extends StatelessWidget {
               child: ValueListenableBuilder<bool>(
                   valueListenable: controller.isLoginNotifier,
                   builder: (context, isLogin, child) {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    return ListView(
                       children: [
                         Text(
                           'Face Off',
@@ -93,11 +92,14 @@ class LoginPage extends StatelessWidget {
                                       .joinCodeInputFieldErrorNotifier,
                                 ),
                               ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 15),
-                          child: ButtonWidget(
-                            label: 'Submit',
-                            onTap: controller.onSubmit,
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 15),
+                            child: ButtonWidget(
+                              label: 'Submit',
+                              onTap: controller.onSubmit,
+                            ),
                           ),
                         ),
                       ],

@@ -76,4 +76,7 @@ Whether or not the login attempt was successful
 ### img_url
 The captured image used to log-in the user
 
+### timestamp
+The datetime of the login attempt
+
 
