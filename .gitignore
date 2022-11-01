@@ -1,5 +1,6 @@
 api_server/node_modules
 api_server/.env
+api_server/images/
 server/.env
 server/node_modules
 device/__pycache__
