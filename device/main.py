@@ -1,4 +1,5 @@
 import socketio
+from image_handler import ImageHandler
 from device_handler import DeviceHandler
 
 # global instances
@@ -15,6 +16,11 @@ client = socketio.Client()
 #     print(data)
 
 
+# this function runs the operation of the device, it should be called once the initialisation sequence is complete
+def operateDevice():
+    print("Device successfully initiated")
+
+
 # call this on init
 def initSocket():
     client.connect(socket_url)
@@ -23,9 +29,19 @@ def initSocket():
         if "security_profiles" in data:
             print("reconnection response")
             globalDeviceHandler.securityProfiles = data["security_profiles"]
+
+            allProfileImagesFileNames = []
+            for securityProfile in globalDeviceHandler.securityProfiles:
+                allProfileImagesFileNames.append(securityProfile["img_url"])
+            ImageHandler.resyncImages(allProfileImagesFileNames)
+
+            operateDevice()
+
         else:
             print("new response")
             globalDeviceHandler.deviceUUID = data["device_id"]
+
+            operateDevice()
 
         print(data)
 
