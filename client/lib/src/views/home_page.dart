@@ -1,5 +1,6 @@
-import 'package:client/src/config.dart/colours.dart';
 import 'package:flutter/material.dart';
+import 'package:client/src/controllers/globals/global_socket_controller.dart';
+import 'package:client/src/config.dart/colours.dart';
 
 /// page for home
 class HomePage extends StatelessWidget {
@@ -9,7 +10,12 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colours.baseColour,
-      body: Text('logged in'),
+      body: ValueListenableBuilder<bool>(
+        valueListenable: globalSocketController.isDeviceOnlineNotifier,
+        builder: (context, isDeviceOnline, child) => Text(
+          isDeviceOnline ? 'connected' : 'device disconnected',
+        ),
+      ),
     );
   }
 }
