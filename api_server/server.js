@@ -78,9 +78,11 @@ app.post('/register', async (req, res) => {
             let newUserResults = await db.promise().query(newUserSQL);
 
             let deletePendingCodeSQL = `DELETE FROM pending_codes WHERE join_code='${join_code}'`;
-            let deletePendingCodeResults = await db.promise().query(deletePendingCodeSQL);
-            // TODO: return user id and device id
-            res.json({ 'status': 'Success', 1: newUserResults, 2: deletePendingCodeResults });
+            await db.promise().query(deletePendingCodeSQL);
+
+            let userID = newUserResults[0].insertId;
+
+            res.json({ user_id: userID, device_id: deviceID });
             return;
         }
     }

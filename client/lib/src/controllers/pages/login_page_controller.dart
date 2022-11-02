@@ -151,10 +151,14 @@ class LoginPageController {
             onPasswordInputFieldChanged(passwordInput) &&
             onJoinCodeInputFieldChanged(joinCodeInput)) {
           final response = await APIHelpers.register(
-              nameInput, emailInput, passwordInput, joinCodeInput);
+            nameInput,
+            emailInput,
+            passwordInput,
+            joinCodeInput,
+          );
           if (response.statusCode == 200) {
             // logged in
-            int deviceID = jsonDecode(response.body)['device_id'];
+            int deviceID = int.parse(jsonDecode(response.body)['device_id']);
             globalSocketController.connectSocket(
                 deviceID,
                 () =>
