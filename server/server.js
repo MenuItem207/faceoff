@@ -47,8 +47,8 @@ io.on('connection', (socket) => {
                 if (err) throw err;
                 deviceID = result.insertId;
 
-                // create room
-                socket.join(deviceID);
+                // create room 
+                socket.join('device_' + deviceID);
 
                 // insert new pending code
                 let newPendingCodeSQL = `INSERT INTO pending_codes (device_id, join_code) VALUES ('${deviceID}', '${joinCode}')`;
@@ -107,7 +107,7 @@ io.on('connection', (socket) => {
         socket.join('client_' + deviceID);
 
         let isDeviceOnline = false;
-        if (io.sockets.adapter.rooms["device_" + deviceID]) { // check if room exists
+        if (io.sockets.adapter.rooms.get("device_" + deviceID)) { // check if room exists
             isDeviceOnline = true;
         }
 
@@ -118,7 +118,7 @@ io.on('connection', (socket) => {
             lastDeviceState = deviceResults[0][0].state;
         }
 
-        let securityProfileSQL = `SELET * from security_profiles WHERE device_id=${deviceID}`;
+        let securityProfileSQL = `SELECT * from security_profiles WHERE device_id='${deviceID}'`;
         let securityProfileResults = await db.promise().query(securityProfileSQL);
 
         respondToClient({

@@ -1,5 +1,10 @@
-import 'package:client/src/controllers/helpers/api_helper.dart';
+import 'dart:convert';
+
+import 'package:client/src/controllers/helpers/naviagtion_helper.dart';
+import 'package:client/src/views/home_page.dart';
 import 'package:flutter/material.dart';
+import 'package:client/src/controllers/globals/global_socket_controller.dart';
+import 'package:client/src/controllers/helpers/api_helper.dart';
 
 /// stores logic for [LoginPage]
 class LoginPageController {
@@ -112,7 +117,7 @@ class LoginPageController {
   }
 
   /// on submit button pressed
-  void onSubmit() async {
+  void onSubmit(BuildContext context) async {
     try {
       if (isLogin) {
         // verify
@@ -121,6 +126,11 @@ class LoginPageController {
           final response = await APIHelpers.login(emailInput, passwordInput);
           if (response.statusCode == 200) {
             // logged in
+            int deviceID = jsonDecode(response.body)['device_id'];
+            globalSocketController.connectSocket(
+                deviceID,
+                () =>
+                    NavigationHelper.navigateToPage(context, const HomePage()));
             print('logged in');
           } else {
             switch (response.statusCode) {
@@ -144,6 +154,11 @@ class LoginPageController {
               nameInput, emailInput, passwordInput, joinCodeInput);
           if (response.statusCode == 200) {
             // logged in
+            int deviceID = jsonDecode(response.body)['device_id'];
+            globalSocketController.connectSocket(
+                deviceID,
+                () =>
+                    NavigationHelper.navigateToPage(context, const HomePage()));
             print('logged in');
           } else {
             switch (response.statusCode) {
