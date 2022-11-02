@@ -39,6 +39,10 @@ class GlobalSocketController {
 
     socket.onDisconnect((data) => onSocketDisconnected());
 
+    socket.on('device_event_reconnect', (data) => print('device reconnected'));
+    socket.on(
+        'device_event_disconnect', (data) => print('device disconnected'));
+
     socket.emitWithAck(
       'client_init',
       {'device_id': deviceID},

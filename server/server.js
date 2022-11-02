@@ -32,6 +32,9 @@ db.connect((err) => {
 // all device events should be titled device_[event] i.e device_init
 // all client events should be titled client_[event] i.e client_init
 io.on('connection', (socket) => {
+    // maps a socket id to a device id
+    let socketIDsToDeviceIDs = {}
+
     console.log('New client connected')
 
     socket.on('device_init', async (data, respondToDevice) => {
@@ -50,6 +53,9 @@ io.on('connection', (socket) => {
                 // create room 
                 socket.join('device_' + deviceID);
 
+                // store id
+                socketIDsToDeviceIDs[socket.id] = deviceID
+
                 // insert new pending code
                 let newPendingCodeSQL = `INSERT INTO pending_codes (device_id, join_code) VALUES ('${deviceID}', '${joinCode}')`;
                 db.query(newPendingCodeSQL,
@@ -67,6 +73,9 @@ io.on('connection', (socket) => {
         } else {
             // create room
             socket.join('device_' + deviceID);
+
+            // store id
+            socketIDsToDeviceIDs[socket.id] = deviceID
 
             // update db
             let updateDeviceSQL = `UPDATE devices SET state=${deviceLockedState} WHERE id=${deviceID}`;
@@ -142,9 +151,16 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         // remove client / device from clients / devices list
-        // TODO: check if socket-client is client or device
+        // TODO: <TEST> check if socket-client is client or device
         // TODO: if device: check if client is connected and notify client of disconnection
         // TODO: if client: do nothing
+        if (socket.id in socketIDsToDeviceIDs) {
+            // device
+            console.log('disconnected device');
+            let deviceID = socketIDsToDeviceIDs[socket.id];
+            delete socketIDsToDeviceIDs[socket.id];
+            io.to('client_' + deviceID).emit('device_event_disconnect');
+        }
 
     });
 });
