@@ -70,6 +70,9 @@ the login attempt id
 ### device_id
 The device id
 
+### profile_id
+The security profile id
+
 ### success_state (bool)
 Whether or not the login attempt was successful
 

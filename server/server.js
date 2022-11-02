@@ -102,6 +102,7 @@ io.on('connection', (socket) => {
     // events include:
     // device_event_reconnect (only emitted when device rejoins after disconnecting)
     // device_event_disconnect (only emitted when device disconnects)
+    // device_event_update_state (emitted when the device's state is updated)
     socket.on('device_event', (data) => {
         // TODO: update sql with latest device state
         // TODO: notify client of updates
@@ -139,7 +140,7 @@ io.on('connection', (socket) => {
 
     // events include
     // client_event_update_lock_state
-    // client_event_new_security_profile
+    // client_event_modify_security_profile
     socket.on('client_event', (data) => {
         // TODO: update sql with latest client state
         // TODO: notify device of updates
