@@ -42,7 +42,7 @@ The devices
 the device id
 
 ### state (bool)
-Whether or not the device is currently unlocked, locked or disabled
+Whether or not the device is currently unlocked (0), locked (1) or disabled (2)
 
 ## security_profiles
 ---

@@ -34,14 +34,15 @@ db.connect((err) => {
 io.on('connection', (socket) => {
     console.log('New client connected')
 
-    socket.on('device_init', (data) => {
+    socket.on('device_init', async (data, respondToDevice) => {
         console.log('initialised new device', data);
         deviceID = data['uuid'];
         isNewDevice = deviceID === null;
+        deviceLockedState = data['device_locked_state'] ?? 1; // default to 1
 
         if (isNewDevice) {
             let joinCode = makeJoinCode(5);
-            let newDeviceSQL = `INSERT INTO devices (state) VALUES (0)`;
+            let newDeviceSQL = `INSERT INTO devices (state) VALUES (1)`; // insert locked state
             db.query(newDeviceSQL, (err, result) => {
                 if (err) throw err;
                 deviceID = result.insertId;
@@ -54,9 +55,8 @@ io.on('connection', (socket) => {
                 db.query(newPendingCodeSQL,
                     (err) => {
                         if (err) throw err;
-                        // send response to client
-                        io.to(socket.id).emit(
-                            'device_init_response', {
+                        // send response to device
+                        respondToDevice({
                             'device_id': deviceID,
                             'pending_code': joinCode,
                         });
@@ -67,10 +67,32 @@ io.on('connection', (socket) => {
         } else {
             // create room
             socket.join('device_' + deviceID);
-            // TODO: update client that device is online + latest data
+
+            // update db
+            let updateDeviceSQL = `UPDATE devices SET state=${deviceLockedState} WHERE id=${deviceID}`;
+            db.query(updateDeviceSQL, (err, result) => { if (err) throw err; });
+
+            // get security profiles
+            let securityProfileSQL = `SELECT * from security_profiles WHERE device_id=${deviceID}`;
+            let securityProfileResults = await db.promise().query(securityProfileSQL);
+            respondToDevice({
+                'security_profiles': securityProfileResults[0],
+            });
+
+            // update connected clients of device update
+            io.to('client_' + deviceID).emit(
+                'device_event_reconnect',
+                {
+                    'device_locked_state': deviceLockedState,
+                }
+            );
+            // TODO: <TEST> update client that device is online + latest data
         }
     });
 
+    // events include:
+    // device_event_reconnect (only emitted when device rejoins after disconnecting)
+    // device_event_disconnect (only emitted when device disconnects)
     socket.on('device_event', (data) => {
         // TODO: update sql with latest device state
         // TODO: notify client of updates
@@ -100,12 +122,15 @@ io.on('connection', (socket) => {
         let securityProfileResults = await db.promise().query(securityProfileSQL);
 
         respondToClient({
-            'isDeviceOnline': isDeviceOnline,
-            'lastDeviceState': lastDeviceState,
+            'is_device_online': isDeviceOnline,
+            'device_locked_state': lastDeviceState,
             'profiles': securityProfileResults[0], // a list of security profile objs (see documentation)
         });
     });
 
+    // events include
+    // client_event_update_lock_state
+    // client_event_new_security_profile
     socket.on('client_event', (data) => {
         // TODO: update sql with latest client state
         // TODO: notify device of updates
