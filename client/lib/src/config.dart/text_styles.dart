@@ -11,10 +11,24 @@ class TextStyles {
     color: Colours.lightTextColour,
   );
 
+  /// text style for light title
+  static final TextStyle titleLight = GoogleFonts.montserrat(
+    fontSize: 50,
+    fontWeight: FontWeight.w400,
+    color: Colours.lightTextColour,
+  );
+
   /// text style for medium text
   static final TextStyle textMed = GoogleFonts.montserrat(
     fontSize: 25,
     fontWeight: FontWeight.w400,
+    color: Colours.lightTextColour,
+  );
+
+  /// text style for bold medium text
+  static final TextStyle textMedBold = GoogleFonts.montserrat(
+    fontSize: 25,
+    fontWeight: FontWeight.w800,
     color: Colours.lightTextColour,
   );
 
@@ -29,6 +43,13 @@ class TextStyles {
   static final TextStyle textSmall = GoogleFonts.montserrat(
     fontSize: 20,
     fontWeight: FontWeight.w400,
+    color: Colours.lightTextColour,
+  );
+
+  /// text style for bold smaller text
+  static final TextStyle textSmallBold = GoogleFonts.montserrat(
+    fontSize: 20,
+    fontWeight: FontWeight.w800,
     color: Colours.lightTextColour,
   );
 

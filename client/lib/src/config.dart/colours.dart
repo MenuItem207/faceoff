@@ -9,5 +9,6 @@ class Colours {
   static const Color lightColour = Color(0xffd0cac0);
   static const Color lightColourVar1 = Color(0xff998b7b);
   static const Color lightTextColour = Color(0xffffffff);
+  static const Color errColour = Color(0xffDD6464);
   static const Color darkTextColour = Color(0xff000000);
 }

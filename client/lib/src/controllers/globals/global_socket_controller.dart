@@ -31,11 +31,28 @@ class GlobalSocketController {
     isDeviceOnlineNotifier.value = newValue;
   }
 
+  /// notifier for [deviceState]
+  ValueNotifier<int> deviceStateNotifier = ValueNotifier(3);
+
   /// the current state of the device (unlocked (0), locked (1), disabled (2), unknown (3))
-  int deviceState = 3;
+  int get deviceState => deviceStateNotifier.value;
+
+  /// updates the value of [deviceState]
+  void updateDeviceState(int newState) {
+    deviceStateNotifier.value = newState;
+  }
+
+  /// notifier for [securityProfiles]
+  ValueNotifier<List> securityProfilesNotifier = ValueNotifier([]);
 
   /// the security profiles
-  List securityProfiles = [];
+  List get securityProfiles => securityProfilesNotifier.value;
+
+  /// updates the value of [securityProfiles]
+  void updateSecurityProfiles(List newSecurityProfiles) {
+    securityProfilesNotifier.value = newSecurityProfiles;
+    securityProfilesNotifier.notifyListeners();
+  }
 
   /// call to connect socket
   void connectSocket(
@@ -57,8 +74,8 @@ class GlobalSocketController {
       {'device_id': deviceID},
       ack: (data) {
         updateIsDeviceOnline(data['is_device_online']);
-        deviceState = data['device_locked_state'];
-        securityProfiles = data['profiles'];
+        updateDeviceState(data['device_locked_state']);
+        updateSecurityProfiles(data['profiles']);
         print('data $data');
         onConnectionSuccesful();
       },
@@ -75,7 +92,7 @@ class GlobalSocketController {
   void onSocketDisconnected() {
     deviceID = null;
     updateIsDeviceOnline(false);
-    deviceState = 3;
-    securityProfiles = [];
+    updateDeviceState(3);
+    updateSecurityProfiles([]);
   }
 }
