@@ -1,3 +1,4 @@
+import 'package:client/src/config.dart/rounded.dart';
 import 'package:flutter/material.dart';
 import 'package:client/src/config.dart/colours.dart';
 import 'package:client/src/config.dart/text_styles.dart';
@@ -27,9 +28,7 @@ class ButtonWidget extends StatelessWidget {
     return GestureDetector(
       onTap: () => onTap(),
       child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15),
-        ),
+        shape: Rounded.cardBorder,
         elevation: elevation,
         color: cardColor,
         child: Padding(

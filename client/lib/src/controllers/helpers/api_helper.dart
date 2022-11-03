@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:client/env.dart';
 import 'package:client/src/controllers/helpers/encryption_helper.dart';
+import 'package:image_picker_web/image_picker_web.dart';
 
 /// contains api requests
 class APIHelpers {
@@ -35,6 +36,20 @@ class APIHelpers {
         },
       ),
     );
+  }
+
+  /// uploads an image
+  static Future uploadImage(MediaInfo file) async {
+    var request = http.MultipartRequest(
+      "POST",
+      Uri.parse('$authServerAddress/image'),
+    );
+
+    request.files.add(http.MultipartFile.fromBytes('image', file.data!,
+        filename: file.fileName));
+
+    var streamedResponse = await request.send();
+    return await http.Response.fromStream(streamedResponse);
   }
 
   /// headers for http requests

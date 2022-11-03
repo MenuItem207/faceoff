@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:client/env.dart';
@@ -50,6 +52,7 @@ class GlobalSocketController {
 
   /// updates the value of [securityProfiles]
   void updateSecurityProfiles(List newSecurityProfiles) {
+    print('updating $newSecurityProfiles');
     securityProfilesNotifier.value = newSecurityProfiles;
     securityProfilesNotifier.notifyListeners();
   }
@@ -94,5 +97,75 @@ class GlobalSocketController {
     updateIsDeviceOnline(false);
     updateDeviceState(3);
     updateSecurityProfiles([]);
+  }
+
+  /// sends a create user profile event
+  Future sendCreateUserProfileEvent(
+    String name,
+    String url,
+  ) async {
+    Map updatedSecurityProfilesData = await sendSocketEvent(
+      'client_event',
+      {
+        'event': 'client_event_modify_security_profile',
+        'type': 'add',
+        'name': name,
+        'img_url': url,
+        'device_id': deviceID,
+      },
+    );
+    updateSecurityProfiles(updatedSecurityProfilesData['security_profiles']);
+  }
+
+  /// sends a update user profile event
+  Future sendUpdateUserProfileEvent(
+    String name,
+    String url,
+    int id,
+  ) async {
+    Map updatedSecurityProfilesData = await sendSocketEvent(
+      'client_event',
+      {
+        'event': 'client_event_modify_security_profile',
+        'type': 'update',
+        'name': name,
+        'img_url': url,
+        'device_id': deviceID,
+        'id': id,
+      },
+    );
+    updateSecurityProfiles(updatedSecurityProfilesData['security_profiles']);
+  }
+
+  /// sends a delete user profile event
+  Future sendDeleteUserProfileEvent(int id) async {
+    Map updatedSecurityProfilesData = await sendSocketEvent(
+      'client_event',
+      {
+        'event': 'client_event_modify_security_profile',
+        'type': 'delete',
+        'id': id,
+      },
+    );
+    updateSecurityProfiles(updatedSecurityProfilesData['security_profiles']);
+  }
+
+  /// sends a socket event and awaits reponse
+  Future sendSocketEvent(
+    String eventTitle,
+    Map eventData,
+  ) async {
+    final Completer completer = Completer();
+    Map? socketResponse;
+    socket.emitWithAck(
+      eventTitle,
+      eventData,
+      ack: (response) {
+        completer.complete();
+        socketResponse = response;
+      },
+    );
+    await completer.future;
+    return socketResponse!;
   }
 }

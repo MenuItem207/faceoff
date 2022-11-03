@@ -141,9 +141,60 @@ io.on('connection', (socket) => {
     // events include
     // client_event_update_lock_state
     // client_event_modify_security_profile
-    socket.on('client_event', (data) => {
+    socket.on('client_event', async (data, respondToClient) => {
         // TODO: update sql with latest client state
         // TODO: notify device of updates
+        let name, img_url, device_id, securityProfileSQL, securityProfileResults;
+        switch (data['event']) {
+            case 'client_event_update_lock_state':
+
+                break;
+
+            case 'client_event_modify_security_profile':
+                switch (data['type']) {
+                    case 'add':
+                        name = data['name'];
+                        img_url = data['img_url'];
+                        device_id = data['device_id'];
+
+                        let profileSQL = `INSERT INTO security_profiles (name, device_id, img_url) VALUES ('${name}', '${device_id}', '${img_url}')`;
+                        await db.promise().query(profileSQL);
+
+                        break;
+
+                    case 'update':
+                        name = data['name'];
+                        img_url = data['img_url'];
+                        device_id = data['device_id'];
+                        id = data['id'];
+
+                        let updateProfileSQL = `UPDATE security_profiles SET name='${name}', img_url='${img_url}' WHERE device_id='${device_id}' AND id='${id}' `;
+                        await db.promise().query(updateProfileSQL);
+
+                        break;
+
+                    case 'delete':
+                        id = data['id'];
+                        let deleteProfileSQL = `DELETE FROM security_profiles WHERE id='${id}'`;
+                        await db.promise().query(deleteProfileSQL);
+
+                        break;
+
+                    default:
+                        break;
+                }
+
+                securityProfileSQL = `SELECT * from security_profiles WHERE device_id=${deviceID}`;
+                securityProfileResults = await db.promise().query(securityProfileSQL);
+                respondToClient({
+                    'security_profiles': securityProfileResults[0],
+                });
+
+                break;
+
+            default:
+                break;
+        }
 
         // events include:
         // toggle device unlock

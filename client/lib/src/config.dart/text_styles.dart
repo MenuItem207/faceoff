@@ -53,6 +53,20 @@ class TextStyles {
     color: Colours.lightTextColour,
   );
 
+  /// text style for tiny text
+  static final TextStyle textTiny = GoogleFonts.montserrat(
+    fontSize: 15,
+    fontWeight: FontWeight.w400,
+    color: Colours.lightTextColour,
+  );
+
+  /// text style for bold tiny text
+  static final TextStyle textTinyBold = GoogleFonts.montserrat(
+    fontSize: 15,
+    fontWeight: FontWeight.w800,
+    color: Colours.lightTextColour,
+  );
+
   /// text style for error text
   static final TextStyle textError = GoogleFonts.montserrat(
     fontSize: 10,

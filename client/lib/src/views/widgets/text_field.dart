@@ -1,4 +1,5 @@
 import 'package:client/src/config.dart/colours.dart';
+import 'package:client/src/config.dart/rounded.dart';
 import 'package:client/src/config.dart/text_styles.dart';
 import 'package:flutter/material.dart';
 
@@ -20,9 +21,7 @@ class StyledTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       elevation: 10,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
+      shape: Rounded.cardBorder,
       color: Colours.lightColour,
       child: Padding(
         padding: const EdgeInsets.only(
