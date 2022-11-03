@@ -1,6 +1,7 @@
 const express = require('express')
 const app = express()
 const cors = require("cors");
+const path = require("path");
 
 require('dotenv').config()
 const mysqlHost = process.env.mysqlHost;
@@ -97,17 +98,16 @@ const storage = multer.diskStorage({
         cb(null, 'images/'); // location of images 
     },
     filename: function (req, file, cb) {
-        let extArray = file.mimetype.split("/");
-        let extension = extArray[extArray.length - 1];
-        cb(null, Date.now() + '.' + extension);
+        var extension = path.extname(file.originalname);
+        cb(null, Date.now() + extension);
     }
 });
 const upload = multer({
     storage: storage, fileFilter:
         function (req, file, callback) {
-            let extArray = file.mimetype.split("/");
-            let ext = extArray[extArray.length - 1];
-            if (ext !== 'png' && ext !== 'jpg' && ext !== 'gif' && ext !== 'jpeg') {
+            var ext = path.extname(file.originalname);
+            console.log(ext)
+            if (ext !== '.png' && ext !== '.jpg' && ext !== '.gif' && ext !== '.jpeg') {
                 return callback(new Error('Only images are allowed'));
             }
             callback(null, true);
