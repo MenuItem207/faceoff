@@ -95,7 +95,6 @@ io.on('connection', (socket) => {
                     'device_locked_state': deviceLockedState,
                 }
             );
-            // TODO: <TEST> update client that device is online + latest data
         }
     });
 
@@ -109,8 +108,6 @@ io.on('connection', (socket) => {
     });
 
     socket.on('client_init', async (data, respondToClient) => {
-        // TODO: <TEST> retrieve current state of device + display all user faces
-        // TODO: <TEST> establish communication channel between device and client
         deviceID = data.device_id;
 
         /// join / create room
@@ -142,8 +139,6 @@ io.on('connection', (socket) => {
     // client_event_update_lock_state
     // client_event_modify_security_profile
     socket.on('client_event', async (data, respondToClient) => {
-        // TODO: update sql with latest client state
-        // TODO: notify device of updates
         let name, img_url, device_id, securityProfileSQL, securityProfileResults;
         switch (data['event']) {
             case 'client_event_update_lock_state':
@@ -230,9 +225,6 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         // remove client / device from clients / devices list
-        // TODO: <TEST> check if socket-client is client or device
-        // TODO: if device: check if client is connected and notify client of disconnection
-        // TODO: if client: do nothing
         if (socket.id in socketIDsToDeviceIDs) {
             // device
             console.log('disconnected device');
