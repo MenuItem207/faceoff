@@ -20,7 +20,7 @@ client = socketio.Client()
 # when client manually updates the device lock state
 def client_event_update_lock_state(data):
     globalDeviceHandler.deviceLockedState = data["new_lock_state"]
-    print(globalDeviceHandler.deviceLockedState)
+    print("Device lock state updated", globalDeviceHandler.deviceLockedState)
 
 
 @client.on("client_event_modify_security_profile")
@@ -44,7 +44,7 @@ def initSocket():
 
     def response(data):
         if "security_profiles" in data:
-            print("reconnection response")
+            print("Reconnection response received", data)
             globalDeviceHandler.securityProfiles = data["security_profiles"]
 
             allProfileImagesFileNames = []
@@ -55,12 +55,10 @@ def initSocket():
             operateDevice()
 
         else:
-            print("new response")
+            print("New Device response received", data)
             globalDeviceHandler.deviceUUID = data["device_id"]
 
             operateDevice()
-
-        print(data)
 
     client.emit(
         "device_init",
