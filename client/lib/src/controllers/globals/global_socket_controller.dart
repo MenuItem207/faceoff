@@ -79,6 +79,8 @@ class GlobalSocketController {
       ),
     );
 
+    socket.on('device_event_new_login_attempt', (data) => print(data));
+
     socket.emitWithAck(
       'client_init',
       {'device_id': deviceID},

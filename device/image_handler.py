@@ -46,3 +46,8 @@ class ImageHandler:
     # deletes a file with filename
     def deleteImageWithFilename(filename):
         os.remove("profiles/" + filename)
+
+    @staticmethod
+    # uploads a file to server
+    def uploadImage():
+        print("unimplemented")

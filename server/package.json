@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^16.0.3",
+    "moment": "^2.29.4",
     "mysql2": "^2.3.3",
     "socket.io": "^4.5.3"
   },

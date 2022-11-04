@@ -47,8 +47,27 @@ def emit_device_state_update():
     print("Update lock state emitted")
 
 
+# emits a login attempt event
+def emit_login_attempt(security_profile, is_successful, img_url):
+    client.emit(
+        "device_event",
+        {
+            "event": "device_event_new_login_attempt",
+            "profile_id": security_profile["id"],
+            "device_id": globalDeviceHandler.deviceUUID,
+            "is_successful": is_successful,
+            "img_url": img_url,
+        },
+    )
+
+
 # this function runs the operation of the device, it should be called once the initialisation sequence is complete
 def operateDevice():
+    emit_login_attempt(
+        globalDeviceHandler.securityProfiles[0],
+        True,
+        "1667547948657.png",
+    )
     print("Device successfully initiated")
 
 

@@ -1,4 +1,5 @@
 const { makeJoinCode } = require('./src/helpers');
+const moment = require('moment')
 
 require('dotenv').config()
 const socketPort = process.env.PORT
@@ -127,6 +128,23 @@ io.on('connection', (socket) => {
                 break;
 
             case 'device_event_new_login_attempt':
+                let security_profile_id = data['profile_id'];
+                let is_successful = data['is_successful'] === true ? 1 : 0;
+                let img_url = data['img_url'];
+                device_id = data['device_id'];
+
+                let addLoginAttemptSQL = `INSERT INTO login_attempts (profile_id, device_id, success_state, img_url, timestamp) VALUES ('${security_profile_id}', '${device_id}', '${is_successful}', '${img_url}', '${moment(Date.now()).format('YYYY-MM-DD HH:mm:ss')}')`;
+                await db.promise().query(addLoginAttemptSQL);
+
+                // notify clients
+                let loginAttemptsSQL = `SELECT * FROM login_attempts WHERE device_id=${device_id}`;
+                let loginAttemptsResults = await db.promise().query(loginAttemptsSQL);
+                io.to('client_' + device_id).emit(
+                    'device_event_new_login_attempt',
+                    {
+                        'login_attempts': loginAttemptsResults[0],
+                    },
+                );
 
                 break;
 
