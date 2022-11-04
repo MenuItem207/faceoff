@@ -147,6 +147,24 @@ io.on('connection', (socket) => {
         let name, img_url, device_id, securityProfileSQL, securityProfileResults;
         switch (data['event']) {
             case 'client_event_update_lock_state':
+                let new_lock_state = data['new_lock_state'];
+                device_id = data['device_id'];
+
+                // notify device
+                io.to('device_' + device_id).emit(
+                    'client_event_update_lock_state',
+                    {
+                        'new_lock_state': new_lock_state,
+                    },
+                );
+
+                // update db
+                let updateDeviceSQL = `UPDATE devices SET state=${new_lock_state} WHERE id=${device_id}`;
+                await db.promise().query(updateDeviceSQL);
+
+                respondToClient({
+                    'new_lock_state': new_lock_state,
+                });
 
                 break;
 

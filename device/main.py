@@ -19,7 +19,8 @@ client = socketio.Client()
 @client.on("client_event_update_lock_state")
 # when client manually updates the device lock state
 def client_event_update_lock_state(data):
-    print("unimplemented")
+    globalDeviceHandler.deviceLockedState = data["new_lock_state"]
+    print(globalDeviceHandler.deviceLockedState)
 
 
 @client.on("client_event_modify_security_profile")

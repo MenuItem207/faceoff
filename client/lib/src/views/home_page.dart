@@ -22,6 +22,10 @@ class HomePage extends StatelessWidget {
                 valueListenable: globalSocketController.deviceStateNotifier,
                 builder: (context, deviceState, child) {
                   String deviceStateText = 'unknown';
+                  String lockDeviceText = 'Lock';
+                  String disableDeviceText = 'Disable';
+                  bool lockDeviceEnabled = true;
+                  bool disableDeviceEnabled = true;
                   if (isDeviceOnline) {
                     switch (deviceState) {
                       case 0:
@@ -29,14 +33,19 @@ class HomePage extends StatelessWidget {
                         break;
                       case 1:
                         deviceStateText = 'locked';
+                        lockDeviceText = 'Unlock';
                         break;
                       case 2:
                         deviceStateText = 'disabled';
+                        disableDeviceText = 'Enable';
+                        lockDeviceEnabled = false;
                         break;
                       default:
                     }
                   } else {
                     deviceStateText = 'offline';
+                    lockDeviceEnabled = false;
+                    disableDeviceEnabled = false;
                   }
 
                   return Row(
@@ -60,16 +69,24 @@ class HomePage extends StatelessWidget {
                                 child: Row(
                                   children: [
                                     ButtonWidget(
-                                      label: 'Lock',
-                                      onTap: () {},
-                                      color: Colours.baseColourVarDark,
+                                      label: lockDeviceText,
+                                      onTap: () => controller.updateDeviceState(
+                                          deviceState == 0 ? 1 : 0),
+                                      color: lockDeviceEnabled
+                                          ? Colours.baseColourVarDark
+                                          : Colors.grey,
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(left: 15),
                                       child: ButtonWidget(
-                                        label: 'Disable',
-                                        onTap: () {},
-                                        color: Colours.errColour,
+                                        label: disableDeviceText,
+                                        onTap: () =>
+                                            controller.updateDeviceState(
+                                          deviceState == 2 ? 1 : 2,
+                                        ),
+                                        color: disableDeviceEnabled
+                                            ? Colours.errColour
+                                            : Colors.grey,
                                         textStyle: TextStyles.textMed.copyWith(
                                           color: Colours.darkTextColour,
                                         ),

@@ -151,6 +151,19 @@ class GlobalSocketController {
     updateSecurityProfiles(updatedSecurityProfilesData['security_profiles']);
   }
 
+  /// sends a update device state event
+  Future sendUpdateDeviceStateEvent(int newState) async {
+    Map updatedStateData = await sendSocketEvent(
+      'client_event',
+      {
+        'event': 'client_event_update_lock_state',
+        'device_id': deviceID,
+        'new_lock_state': newState,
+      },
+    );
+    updateDeviceState(updatedStateData['new_lock_state']);
+  }
+
   /// sends a socket event and awaits reponse
   Future sendSocketEvent(
     String eventTitle,

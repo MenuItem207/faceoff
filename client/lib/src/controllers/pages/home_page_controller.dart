@@ -48,4 +48,9 @@ class HomePageController {
   void onDeletePressed(int id) {
     globalSocketController.sendDeleteUserProfileEvent(id);
   }
+
+  /// updates the device state
+  void updateDeviceState(int newState) {
+    globalSocketController.sendUpdateDeviceStateEvent(newState);
+  }
 }
