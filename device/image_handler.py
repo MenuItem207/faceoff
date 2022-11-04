@@ -6,6 +6,8 @@ from env import api_url
 class ImageHandler:
     # checks urls of images locally stored, deletes unused images and downloads new ones
     def resyncImages(allProfileImagesFilenames):
+        print("-" * 10)
+        print("Syncing images")
         allLocalImagesFilenames = ImageHandler.getAllImagesFilenames()
         allNewImages = list(
             set(allProfileImagesFilenames) - set(allLocalImagesFilenames)
@@ -15,21 +17,22 @@ class ImageHandler:
             set(allLocalImagesFilenames) - set(allProfileImagesFilenames)
         )
 
-        print("retrieving new images")
+        print("allNewImages", allNewImages)
+        print("downloading new images")
         for filename in allNewImages:
             ImageHandler.getAndSaveImageWithFilename(filename)
 
+        print("allRemovedImages", allRemovedImages)
         print("deleting removed images")
         for filename in allRemovedImages:
             ImageHandler.deleteImageWithFilename(filename)
 
-        print("allNewImages", allNewImages)
-        print("allRemovedImages", allRemovedImages)
+        print("images synced successfully")
+        print("-" * 10)
 
     @staticmethod
     # returns all the filenames (with extension) of all locally stored images
     def getAllImagesFilenames():
-        print("files")
         return os.listdir("./profiles")
 
     @staticmethod

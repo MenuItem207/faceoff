@@ -145,6 +145,7 @@ class GlobalSocketController {
         'event': 'client_event_modify_security_profile',
         'type': 'delete',
         'id': id,
+        'device_id': deviceID,
       },
     );
     updateSecurityProfiles(updatedSecurityProfilesData['security_profiles']);

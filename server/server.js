@@ -175,6 +175,7 @@ io.on('connection', (socket) => {
 
                     case 'delete':
                         id = data['id'];
+                        device_id = data['device_id'];
                         let deleteProfileSQL = `DELETE FROM security_profiles WHERE id='${id}'`;
                         await db.promise().query(deleteProfileSQL);
 
@@ -184,11 +185,19 @@ io.on('connection', (socket) => {
                         break;
                 }
 
-                securityProfileSQL = `SELECT * from security_profiles WHERE device_id=${deviceID}`;
+                securityProfileSQL = `SELECT * from security_profiles WHERE device_id=${device_id}`;
                 securityProfileResults = await db.promise().query(securityProfileSQL);
                 respondToClient({
                     'security_profiles': securityProfileResults[0],
                 });
+
+                // notify device
+                io.to('device_' + device_id).emit(
+                    "client_event_modify_security_profile",
+                    {
+                        'security_profiles': securityProfileResults[0],
+                    },
+                );
 
                 break;
 
