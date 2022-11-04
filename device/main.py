@@ -33,6 +33,20 @@ def client_event_modify_security_profile(data):
     ImageHandler.resyncImages(allProfileImagesFileNames)
 
 
+# emits device state updated event
+def emit_device_state_update():
+    client.emit(
+        "device_event",
+        {
+            "event": "device_event_update_state",
+            "new_lock_state": globalDeviceHandler.deviceLockedState,
+            "device_id": globalDeviceHandler.deviceUUID,
+        },
+    )
+
+    print("Update lock state emitted")
+
+
 # this function runs the operation of the device, it should be called once the initialisation sequence is complete
 def operateDevice():
     print("Device successfully initiated")

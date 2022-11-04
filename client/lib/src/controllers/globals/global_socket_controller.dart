@@ -72,6 +72,13 @@ class GlobalSocketController {
 
     socket.on('device_event_disconnect', (data) => updateIsDeviceOnline(false));
 
+    socket.on(
+      'device_event_update_state',
+      (data) => updateDeviceState(
+        data['new_lock_state'],
+      ),
+    );
+
     socket.emitWithAck(
       'client_init',
       {'device_id': deviceID},

@@ -102,9 +102,37 @@ io.on('connection', (socket) => {
     // device_event_reconnect (only emitted when device rejoins after disconnecting)
     // device_event_disconnect (only emitted when device disconnects)
     // device_event_update_state (emitted when the device's state is updated)
-    socket.on('device_event', (data) => {
+    // device_event_new_login_attempt (emitted when the device has a new attempt)
+    socket.on('device_event', async (data) => {
         // TODO: update sql with latest device state
         // TODO: notify client of updates
+        let device_id;
+        switch (data['event']) {
+            case 'device_event_update_state':
+                let device_locked_state = data['new_lock_state']
+                device_id = data['device_id'];
+
+                // update db
+                let updateDeviceSQL = `UPDATE devices SET state=${device_locked_state} WHERE id=${device_id}`;
+                await db.promise().query(updateDeviceSQL);
+
+                // notify client
+                io.to('client_' + device_id).emit(
+                    'device_event_update_state',
+                    {
+                        'new_lock_state': device_locked_state,
+                    },
+                );
+
+                break;
+
+            case 'device_event_new_login_attempt':
+
+                break;
+
+            default:
+                break;
+        }
     });
 
     socket.on('client_init', async (data, respondToClient) => {
