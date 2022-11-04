@@ -1,19 +1,15 @@
 import socketio
 from image_handler import ImageHandler
 from device_handler import DeviceHandler
+from user_input import UserInput
 from env import socket_url
+
+# * the start point of the code is initSocket() (bottom of the file)
+# * to view normal operation of device see operateDevice()
 
 # global instances
 globalDeviceHandler = DeviceHandler()
-
 client = socketio.Client()
-
-# # socket events
-# @client.on("device_init_response")
-# # when a the device has been created in backend, this response is received
-# def device_init_response(data):
-#
-#     print(data)
 
 
 @client.on("client_event_update_lock_state")
@@ -63,12 +59,30 @@ def emit_login_attempt(security_profile, is_successful, img_url):
 
 # this function runs the operation of the device, it should be called once the initialisation sequence is complete
 def operateDevice():
-    emit_login_attempt(
-        globalDeviceHandler.securityProfiles[0],
-        True,
-        "1667547948657.png",
-    )
     print("Device successfully initiated")
+
+    while True:
+        # TODO: update outputs i.e LED to reflect current device state
+
+        userInput = UserInput.getUserInput()
+
+        # use if - else instead of switch - case since the
+        # raspberry pi might not have the latest version of python
+        if userInput == "lock" or userInput == "unlock":
+            # if disabled, ignore
+            if globalDeviceHandler.deviceLockedState == 2:
+                print("ignored lol")
+            else:
+                # TODO: verify user
+                newState = 0
+                if userInput == "lock":
+                    newState = 1
+
+                globalDeviceHandler.deviceLockedState = newState
+                emit_device_state_update()
+
+        else:
+            print("invalid command")
 
 
 # call this on init
