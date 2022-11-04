@@ -5,4 +5,5 @@ server/.env
 server/node_modules
 device/__pycache__
 device/config.txt
+device/env.py
 client/lib/env.dart

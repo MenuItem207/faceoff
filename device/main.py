@@ -1,11 +1,11 @@
 import socketio
 from image_handler import ImageHandler
 from device_handler import DeviceHandler
+from env import socket_url
 
 # global instances
 globalDeviceHandler = DeviceHandler()
 
-socket_url = "http://localhost:3000"  # url for the socket TODO: move this to .env file
 client = socketio.Client()
 
 # # socket events
