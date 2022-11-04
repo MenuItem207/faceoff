@@ -81,6 +81,13 @@ def operateDevice():
                 globalDeviceHandler.deviceLockedState = newState
                 emit_device_state_update()
 
+        if userInput == "test attempt":
+            emit_login_attempt(
+                globalDeviceHandler.securityProfiles[0],
+                True,
+                "1667547948657.png",
+            )
+
         else:
             print("invalid command")
 
