@@ -174,10 +174,14 @@ io.on('connection', (socket) => {
         let securityProfileSQL = `SELECT * from security_profiles WHERE device_id='${deviceID}'`;
         let securityProfileResults = await db.promise().query(securityProfileSQL);
 
+        let loginAttemptsSQL = `SELECT * FROM login_attempts WHERE device_id=${deviceID}`;
+        let loginAttemptsResults = await db.promise().query(loginAttemptsSQL);
+
         respondToClient({
             'is_device_online': isDeviceOnline,
             'device_locked_state': lastDeviceState,
             'profiles': securityProfileResults[0], // a list of security profile objs (see documentation)
+            'login_attempts': loginAttemptsResults[0], // a list of all the past login attempts
         });
     });
 
