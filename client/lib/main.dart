@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:client/src/config.dart/scroll.dart';
 import 'package:client/src/views/login_page.dart';
 
 void main() {
@@ -10,8 +11,14 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: LoginPage(),
+    return MaterialApp(
+      builder: (context, child) {
+        return ScrollConfiguration(
+          behavior: ScrollBehaviour(),
+          child: child!,
+        );
+      },
+      home: const LoginPage(),
     );
   }
 }

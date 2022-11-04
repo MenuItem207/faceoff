@@ -57,6 +57,19 @@ class GlobalSocketController {
     securityProfilesNotifier.notifyListeners();
   }
 
+  /// notifier for [loginAttempts]
+  ValueNotifier<List> loginAttemptsNotifier = ValueNotifier([]);
+
+  /// the login attempts
+  List get loginAttempts => loginAttemptsNotifier.value;
+
+  /// updates the value of [loginAttempts]
+  void updateLoginAttempts(List newLoginAttempts) {
+    print('updating $newLoginAttempts');
+    loginAttemptsNotifier.value = newLoginAttempts.reversed.toList();
+    loginAttemptsNotifier.notifyListeners();
+  }
+
   /// call to connect socket
   void connectSocket(
     int newDeviceID,
@@ -79,7 +92,12 @@ class GlobalSocketController {
       ),
     );
 
-    socket.on('device_event_new_login_attempt', (data) => print(data));
+    socket.on(
+      'device_event_new_login_attempt',
+      (data) => updateLoginAttempts(
+        data['login_attempts'],
+      ),
+    );
 
     socket.emitWithAck(
       'client_init',
@@ -88,6 +106,7 @@ class GlobalSocketController {
         updateIsDeviceOnline(data['is_device_online']);
         updateDeviceState(data['device_locked_state']);
         updateSecurityProfiles(data['profiles']);
+        updateLoginAttempts(data['login_attempts']);
         print('data $data');
         onConnectionSuccesful();
       },
