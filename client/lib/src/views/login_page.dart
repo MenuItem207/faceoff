@@ -112,7 +112,7 @@ class LoginPage extends StatelessWidget {
           Expanded(
               child: Padding(
             padding: const EdgeInsets.only(top: 50, bottom: 50, right: 15),
-            child: Image.asset('assets/muscle.png'),
+            child: Image.asset('assets/unflexed.png'),
           )),
         ],
       ),

@@ -26,4 +26,5 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/muscle.png
+    - assets/unflexed.png
+    - assets/flexed.png

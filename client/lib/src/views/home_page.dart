@@ -208,7 +208,21 @@ class HomePage extends StatelessWidget {
                     child: Padding(
                       padding:
                           const EdgeInsets.only(top: 50, bottom: 50, right: 15),
-                      child: Image.asset('assets/muscle.png'),
+                      child: ValueListenableBuilder<bool>(
+                          valueListenable:
+                              globalSocketController.isDeviceOnlineNotifier,
+                          builder: (context, isDeviceOnline, child) {
+                            return ValueListenableBuilder<int>(
+                                valueListenable:
+                                    globalSocketController.deviceStateNotifier,
+                                builder: (context, deviceState, child) {
+                                  if (isDeviceOnline && deviceState == 1) {
+                                    return Image.asset('assets/flexed.png');
+                                  }
+
+                                  return Image.asset('assets/unflexed.png');
+                                });
+                          }),
                     ),
                   ),
                 ],
