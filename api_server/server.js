@@ -128,6 +128,27 @@ app.get(
     }
 );
 
+// reset
+const fs = require("fs");
+app.get(
+    '/reset-all',
+    (req, res) => {
+        const directory = "images";
+
+        fs.readdir(directory, (err, files) => {
+            if (err) throw err;
+
+            for (const file of files) {
+                fs.unlink(path.join(directory, file), (err) => {
+                    if (err) throw err;
+                });
+            }
+        });
+
+        return res.json({ 'status': 'success' });
+    }
+);
+
 const serverPort = process.env.PORT;
 app.listen(serverPort);
 console.log('Server running on port', serverPort);
