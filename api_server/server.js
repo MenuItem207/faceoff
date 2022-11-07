@@ -130,7 +130,7 @@ app.post(
 app.get(
     '/image/:id',
     (req, res) => {
-        res.sendFile(`${__dirname}\\images\\${req.params.id}`);
+        res.sendFile(`${__dirname}/images/${req.params.id}`);
     }
 );
 
