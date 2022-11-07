@@ -113,16 +113,10 @@ const upload = multer({
         }
 });
 
-const fs = require("fs");
 app.post(
     '/image',
     upload.single('image'), // form data key should be 'image'
     (req, res) => {
-        const directory = "images";
-        fs.readdir(directory, (err, files) => {
-            if (err) throw err;
-            console.log(files);
-        });
         res.json({ 'filename': req.file.filename });
     }
 );
@@ -135,6 +129,7 @@ app.get(
 );
 
 // reset
+const fs = require("fs");
 app.get(
     '/reset-all',
     (req, res) => {
