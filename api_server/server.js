@@ -118,6 +118,7 @@ app.post(
     '/image',
     upload.single('image'), // form data key should be 'image'
     (req, res) => {
+        const directory = "images";
         fs.readdir(directory, (err, files) => {
             if (err) throw err;
             console.log(files);
