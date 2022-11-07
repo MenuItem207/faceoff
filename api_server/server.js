@@ -117,6 +117,10 @@ app.post(
     '/image',
     upload.single('image'), // form data key should be 'image'
     (req, res) => {
+        fs.readdir(directory, (err, files) => {
+            if (err) throw err;
+            console.log(files);
+        });
         res.json({ 'filename': req.file.filename });
     }
 );
