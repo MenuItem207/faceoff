@@ -1,4 +1,4 @@
 # TODO: rename this file to env.py and update the urls
 
-socket_url = "http://localhost:3000"  # url for the socket TODO: move this to .env file
-api_url = "http://localhost:3001"  # url for the api server TODO: move this to .env file
+api_url = "https://api-server-production.up.railway.app"  # url for the socket TODO: move this to .env file
+socket_url = "https://socket-server-production.up.railway.app"  # url for the api server TODO: move this to .env file
