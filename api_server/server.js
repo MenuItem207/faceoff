@@ -91,6 +91,31 @@ app.post('/register', async (req, res) => {
     res.status(401).json('Invalid join code');
 });
 
+/**
+ * api for the raspberry pi
+ */
+app.post('/device-info/:device', async (req, res) => {
+    try {
+        let device_id = req.params.device;
+        let device_temperature = req.body.temperature;
+        let device_humidity = req.body.humidity;
+
+        let deviceSQL = `SELECT * FROM devices WHERE id=${device_id};`;
+        let deviceSQLResults = await db.promise().query(deviceSQL);
+
+        if (deviceSQLResults[0].length == 1) {
+            let current_device_state = deviceSQLResults[0][0].state;
+
+            let updateDeviceDataSQL = `UPDATE devices SET temp=${device_temperature}, humi=${device_humidity} WHERE id=${device_id};`;
+            await db.promise().query(updateDeviceDataSQL);
+
+            return res.json({ state: current_device_state });
+        }
+    } catch (err) { }
+
+    res.status(401).json('Invalid device id');
+});
+
 // setup multer
 const multer = require('multer');
 const storage = multer.diskStorage({
