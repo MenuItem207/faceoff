@@ -4,6 +4,9 @@ from device_handler import DeviceHandler
 from user_input import UserInput
 from env import socket_url
 
+print(UserInput.getUserImagePath())
+exit()
+
 # * the start point of the code is initSocket() (bottom of the file)
 # * to view normal operation of device see operateDevice()
 
@@ -44,12 +47,12 @@ def emit_device_state_update():
 
 
 # emits a login attempt event
-def emit_login_attempt(security_profile, is_successful, img_url):
+def emit_login_attempt(security_profile_id, is_successful, img_url):
     client.emit(
         "device_event",
         {
             "event": "device_event_new_login_attempt",
-            "profile_id": security_profile["id"],
+            "profile_id": security_profile_id,
             "device_id": globalDeviceHandler.deviceUUID,
             "is_successful": is_successful,
             "img_url": img_url,
@@ -89,9 +92,31 @@ def operateDevice():
 
                 # only emit state if changed
                 if globalDeviceHandler.deviceLockedState != newState:
-                    # TODO: verify user
-                    globalDeviceHandler.deviceLockedState = newState
-                    emit_device_state_update()
+                    result_image_paths = UserInput.verifyUser()
+
+                    # result can be either false or an id so make isSuccess a bool
+                    isSuccess = result_image_paths
+                    if result_image_paths:
+                        isSuccess = True
+
+                    profile_id = 0  # 0 for not verified
+
+                    # only emit change in state if verified
+                    if isSuccess:
+                        globalDeviceHandler.deviceLockedState = newState
+                        emit_device_state_update()
+
+                        # find profile id
+                        for securityProfile in globalDeviceHandler.securityProfiles:
+                            if securityProfile["img_url"] == result_image_paths[0]:
+                                profile_id = securityProfile["id"]
+
+                    # emit a login attempt
+                    emit_login_attempt(
+                        profile_id,
+                        isSuccess,
+                        result_image_paths[1],
+                    )
 
         elif userInput == "test attempt":
             emit_login_attempt(
