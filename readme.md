@@ -1,4 +1,10 @@
 # Faceoff
+To start device:
+```
+cd device
+pip install -r requirements.txt
+py main.py
+```
 
 ## Documentation
 
