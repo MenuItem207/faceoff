@@ -124,7 +124,13 @@ const storage = multer.diskStorage({
     },
     filename: function (req, file, cb) {
         var extension = path.extname(file.originalname);
-        cb(null, Date.now() + extension);
+
+        // if filename format is image_129341804.jpg
+        if (file.originalname.includes('image_')) {
+            cb(null, file.originalname);
+        } else {
+            cb(null, Date.now() + extension);
+        }
     }
 });
 const upload = multer({
