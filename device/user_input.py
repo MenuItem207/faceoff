@@ -6,6 +6,8 @@ import time
 import speech_recognition as sr
 import pyttsx3
 
+from image_handler import ImageHandler
+
 
 # Initialize the recognizer
 r = sr.Recognizer()
@@ -57,7 +59,7 @@ class UserInput:
     def getUserImagePath() -> str:
         camera = cv2.VideoCapture(0)
         success, frame = camera.read()
-        timestamp = time.time()
+        timestamp = round(time.time())
         filename = "./attempts/image_{}.jpg".format(timestamp)
         cv2.imwrite(filename, frame)
         return filename
@@ -66,12 +68,12 @@ class UserInput:
     # returns [filename of the matching user, filename of the comparison image]
     def verifyUser(entries_path=r"./profiles"):
         comparison_image_path = UserInput.getUserImagePath()
+        ImageHandler.uploadImage(comparison_image_path)
 
         # Accessing and Encrypting image files from FacesDB
         known_face_encodings = []
         known_face_names = []
         entries = os.listdir(entries_path)
-        print(entries)
 
         for entry in entries:
             Loading_Image = face_recognition.load_image_file(entries_path + "/" + entry)
@@ -82,19 +84,20 @@ class UserInput:
 
         # get face encoding
         unknown_face = face_recognition.load_image_file(comparison_image_path)
-        unknown_face_encoding = face_recognition.face_encodings(unknown_face)[0]
+        unknown_face_encoding_arr = face_recognition.face_encodings(unknown_face)
+        if unknown_face_encoding_arr:
+            unknown_face_encoding = unknown_face_encoding_arr[0]
 
-        # See if the face is a match for the known face(s)
-        matches = face_recognition.compare_faces(
-            known_face_encodings, unknown_face_encoding
-        )
-        print(matches)
+            # See if the face is a match for the known face(s)
+            matches = face_recognition.compare_faces(
+                known_face_encodings, unknown_face_encoding
+            )
 
-        # If a match was found in known_face_encodings, just use the first one.
-        if True in matches:
-            first_match_index = matches.index(True)
-            name = known_face_names[first_match_index]
-            print("This image matches up with " + name)
-            return [name, comparison_image_path]
+            # If a match was found in known_face_encodings, just use the first one.
+            if True in matches:
+                first_match_index = matches.index(True)
+                name = known_face_names[first_match_index]
+                print("This image matches up with " + name)
+                return [os.path.basename(comparison_image_path), name]
 
-        return []
+        return [os.path.basename(comparison_image_path)]

@@ -4,9 +4,6 @@ from device_handler import DeviceHandler
 from user_input import UserInput
 from env import socket_url
 
-print(UserInput.getUserImagePath())
-exit()
-
 # * the start point of the code is initSocket() (bottom of the file)
 # * to view normal operation of device see operateDevice()
 
@@ -96,26 +93,33 @@ def operateDevice():
 
                     # result can be either false or an id so make isSuccess a bool
                     isSuccess = result_image_paths
-                    if result_image_paths:
+                    if len(result_image_paths) == 2:
                         isSuccess = True
+                    else:
+                        isSuccess = False
 
                     profile_id = 0  # 0 for not verified
 
                     # only emit change in state if verified
                     if isSuccess:
+                        UserInput.SpeakText(
+                            "successful attempt recorded, updating state now"
+                        )
                         globalDeviceHandler.deviceLockedState = newState
                         emit_device_state_update()
 
                         # find profile id
                         for securityProfile in globalDeviceHandler.securityProfiles:
-                            if securityProfile["img_url"] == result_image_paths[0]:
+                            if securityProfile["img_url"] == result_image_paths[1]:
                                 profile_id = securityProfile["id"]
+                    else:
+                        UserInput.SpeakText("unsuccesful attempt recorded")
 
                     # emit a login attempt
                     emit_login_attempt(
                         profile_id,
                         isSuccess,
-                        result_image_paths[1],
+                        result_image_paths[0],
                     )
 
         elif userInput == "test attempt":
