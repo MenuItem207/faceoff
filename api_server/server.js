@@ -122,9 +122,10 @@ app.post('/device-info/:device', async (req, res) => {
 app.get(
     '/device-info/:device',
     async (req, res) => {
+        let device = req.params.device;
         let humidity, temperature;
 
-        let deviceSQL = `SELECT * FROM devices WHERE id=${device_id};`;
+        let deviceSQL = `SELECT * FROM devices WHERE id=${device};`;
         let deviceSQLResults = await db.promise().query(deviceSQL);
 
         if (deviceSQLResults[0].length == 1) {
