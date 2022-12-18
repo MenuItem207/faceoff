@@ -127,7 +127,7 @@ class GlobalSocketController {
     );
 
     // also add device pinger
-    Timer.periodic(const Duration(seconds: 1), (Timer timer) async {
+    Timer.periodic(const Duration(seconds: 15), (Timer timer) async {
       if (deviceID == null) {
         // don't do anything
         timer.cancel();

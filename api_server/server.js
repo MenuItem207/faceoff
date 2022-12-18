@@ -120,7 +120,7 @@ app.post('/device-info/:device', async (req, res) => {
  * api for the client to fetch raspberry pi temperature / humidity data
  */
 app.get(
-    'device-info/:device',
+    '/device-info/:device',
     async (req, res) => {
         let humidity, temperature;
 
