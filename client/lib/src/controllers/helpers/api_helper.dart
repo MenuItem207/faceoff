@@ -38,6 +38,14 @@ class APIHelpers {
     );
   }
 
+  /// fetches the device data
+  static Future fetchDeviceData(int deviceID) async {
+    return await http.get(
+      Uri.parse('$authServerAddress/device-info/$deviceID'),
+      headers: headers,
+    );
+  }
+
   /// uploads an image
   static Future uploadImage(MediaInfo file) async {
     var request = http.MultipartRequest(

@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:client/src/controllers/helpers/api_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:socket_io_client/socket_io_client.dart';
 import 'package:client/env.dart';
@@ -70,6 +72,18 @@ class GlobalSocketController {
     loginAttemptsNotifier.notifyListeners();
   }
 
+  /// humidity of the device
+  ValueNotifier<double?> humidityNotifier = ValueNotifier(null);
+
+  /// temperature of the device
+  ValueNotifier<double?> temperatureNotifier = ValueNotifier(null);
+
+  /// updates the values
+  void updateHumidityAndTemperature(double? humidity, double? temperature) {
+    humidityNotifier.value = humidity;
+    temperatureNotifier.value = temperature;
+  }
+
   /// call to connect socket
   void connectSocket(
     int newDeviceID,
@@ -111,6 +125,24 @@ class GlobalSocketController {
         onConnectionSuccesful();
       },
     );
+
+    // also add device pinger
+    Timer.periodic(const Duration(seconds: 1), (Timer timer) async {
+      if (deviceID == null) {
+        // don't do anything
+        timer.cancel();
+        return;
+      }
+
+      final response = await APIHelpers.fetchDeviceData(deviceID!);
+      if (response.statusCode == 200) {
+        Map responseData = jsonDecode(response.body);
+        updateHumidityAndTemperature(
+          responseData['humidity'],
+          responseData['temperature'],
+        );
+      }
+    });
   }
 
   /// call to disconnect socket

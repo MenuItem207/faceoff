@@ -116,6 +116,26 @@ app.post('/device-info/:device', async (req, res) => {
     res.status(401).json('Invalid device id');
 });
 
+/**
+ * api for the client to fetch raspberry pi temperature / humidity data
+ */
+app.get(
+    'device-info/:device',
+    async (req, res) => {
+        let humidity, temperature;
+
+        let deviceSQL = `SELECT * FROM devices WHERE id=${device_id};`;
+        let deviceSQLResults = await db.promise().query(deviceSQL);
+
+        if (deviceSQLResults[0].length == 1) {
+            humidity = deviceSQLResults[0][0].humi;
+            temperature = deviceSQLResults[0][0].temp;
+        }
+
+        return res.json({ humidity: humidity, temperature: temperature });
+    }
+);
+
 // setup multer
 const multer = require('multer');
 const storage = multer.diskStorage({

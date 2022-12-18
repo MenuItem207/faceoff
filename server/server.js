@@ -165,10 +165,13 @@ io.on('connection', (socket) => {
         }
 
         let lastDeviceState = undefined;
+        let humidity, temperature;
         let deviceSQL = `SELECT * from devices WHERE id='${deviceID}'`;
         let deviceResults = await db.promise().query(deviceSQL);
         if (deviceResults[0].length === 1) {
             lastDeviceState = deviceResults[0][0].state;
+            humidity = deviceResults[0][0].humi;
+            temperature = deviceResults[0][0].temp;
         }
 
         let securityProfileSQL = `SELECT * from security_profiles WHERE device_id='${deviceID}'`;
@@ -182,6 +185,8 @@ io.on('connection', (socket) => {
             'device_locked_state': lastDeviceState,
             'profiles': securityProfileResults[0], // a list of security profile objs (see documentation)
             'login_attempts': loginAttemptsResults[0], // a list of all the past login attempts
+            'humidity': humidity,
+            'temperature': temperature,
         });
     });
 
