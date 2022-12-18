@@ -135,6 +135,7 @@ class GlobalSocketController {
       }
 
       final response = await APIHelpers.fetchDeviceData(deviceID!);
+      print(response.statusCode);
       if (response.statusCode == 200) {
         Map responseData = jsonDecode(response.body);
         updateHumidityAndTemperature(

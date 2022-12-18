@@ -1,6 +1,7 @@
 import 'package:client/env.dart';
 import 'package:client/src/config.dart/rounded.dart';
 import 'package:client/src/controllers/pages/home_page_controller.dart';
+import 'package:client/src/views/widgets/home_page/device_stats.dart';
 import 'package:client/src/views/widgets/home_page/security_profiles.dart';
 import 'package:flutter/material.dart';
 import 'package:client/src/config.dart/text_styles.dart';
@@ -107,6 +108,7 @@ class HomePage extends StatelessWidget {
                                         ],
                                       ),
                                     ),
+                                    const DeviceStats(),
 
                                     SecurityProfiles(controller: controller),
 

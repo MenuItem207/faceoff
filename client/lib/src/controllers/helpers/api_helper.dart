@@ -42,7 +42,6 @@ class APIHelpers {
   static Future fetchDeviceData(int deviceID) async {
     return await http.get(
       Uri.parse('$authServerAddress/device-info/$deviceID'),
-      headers: headers,
     );
   }
 
