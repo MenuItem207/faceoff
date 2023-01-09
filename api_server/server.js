@@ -111,7 +111,9 @@ app.post('/device-info/:device', async (req, res) => {
 
             return res.json({ state: current_device_state });
         }
-    } catch (err) { }
+    } catch (err) {
+        console.log(err);
+    }
 
     res.status(401).json('Invalid device id');
 });
