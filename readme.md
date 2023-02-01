@@ -47,8 +47,14 @@ The devices
 ### id
 the device id
 
-### state (bool)
+### state (int)
 Whether or not the device is currently unlocked (0), locked (1) or disabled (2)
+
+### humi (double)
+the current humidity
+
+### temp (double)
+the current temperature
 
 ## security_profiles
 ---
